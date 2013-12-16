@@ -8,6 +8,7 @@ import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +30,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 /**
@@ -75,6 +77,11 @@ public class KeyboardOSD {
                         throw new IllegalStateException("add:"+mod);
                     }
                     modifiersKeyPanels.put(mod, tmp);
+                    tmp.setBorder(new LineBorder(Color.RED.brighter(), 4));
+                    /**/ removeKey(fadeAfter, fadeFor, tmp);
+                } else if (ev.getKeyCode()>=37 && ev.getKeyCode()<=40) {
+                    tmp = addKey(e.asKeyPressed().ev, lastPressedCode);
+                    removeKey(fadeAfter, fadeFor, tmp);
                 } else {
                     lastPressedCode = ev.getKeyCode();
                 }
@@ -88,7 +95,7 @@ public class KeyboardOSD {
                     if (tmp==null) {
                         throw new IllegalStateException("rem:"+mod);
                     }
-                    removeKey(0, 0, tmp);
+                    //removeKey(0, 0, tmp);
                 }
                 break;
             }
@@ -172,8 +179,15 @@ public class KeyboardOSD {
         
     }
     
-    private Map<String, String> keyPatch = new HashMap<String, String>() {{
+    private final Map<String, String> keyPatch = new HashMap<String, String>() {{
+        put("1 8", "⇽");
         put("1 9", "↹");
+        put("1 10", "↲");
+        put("1 32", "␣");
+        put("1 37", "⇦");//←
+        put("1 38", "⇧");//↑
+        put("1 39", "⇨");//→
+        put("1 40", "⇩");//↓
     }};
     private JPanel addKey(NativeKeyEvent ev, int lastPressedCode) {
         String keyChar = ev.getKeyChar()+"";
@@ -184,10 +198,16 @@ public class KeyboardOSD {
     }
     private JPanel addKey(String keyText) {
         JLabel l = new JLabel(keyText);
+        if (keyText.length()<2) {
+            l.setFont(l.getFont().deriveFont(Font.BOLD, 20));
+        }
         JPanel k = new JPanel(new BorderLayout());
         // k.setOpaque(false);
         //l.setOpaque(false);
         k.setBackground(Color.LIGHT_GRAY);
+        if (!modifiersKeyPanels.isEmpty()) {
+            k.setBackground(Color.RED.brighter());
+        }
         int marginX = 5, marginY = 5;
         Border margin = new EmptyBorder(marginY, marginX, marginY, marginX);
         k.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, Color.BLACK, Color.DARK_GRAY), margin));
@@ -203,7 +223,7 @@ public class KeyboardOSD {
     private void removeKey(int fadeAfter, final int fadeFor, final JPanel keyPanel) {
         final long start = System.currentTimeMillis();
         final long fadeAt = start+fadeAfter;
-        final Timer t = new Timer(50, null);
+        final Timer t = new Timer(20, null);
         t.addActionListener(new ActionListener() {
             int r = keyPanel.getComponent(0).getBackground().getRed();
             int g = keyPanel.getComponent(0).getBackground().getGreen();
@@ -215,8 +235,11 @@ public class KeyboardOSD {
                     f.pack();
                     t.stop();
                 } else {
-                    //float af = (fadeAt - now) / (float)(fadeFor);
+                    float af = (fadeAt - now) / (float)(fadeFor);
                     //int a = Math.max(0, Math.min((int)(af*255), 255));
+                    //int a = Math.max(0, Math.min((int)(af*20), 20));
+                    //keyPanel.setSize(new Dimension(a, 20));
+                    //f.pack();
                     //System.err.println(r+" "+g+" "+b+" "+a);
                     //keyPanel.setBackground(new Color(r,g,b,a));
                     //keyPanel.setBackground(new Color(r,g,b));
