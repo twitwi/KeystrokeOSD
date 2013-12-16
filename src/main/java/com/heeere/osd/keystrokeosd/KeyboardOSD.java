@@ -150,7 +150,7 @@ public class KeyboardOSD {
                 try {
                     robot = new Robot();
                 } catch (AWTException ex) {
-                    Logger.getLogger(ShapedWindowDemo.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(KeyboardOSD.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             @Override
