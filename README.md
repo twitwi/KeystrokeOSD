@@ -29,6 +29,3 @@ Following https://devcenter.heroku.com/articles/local-maven-dependencies
     mvn deploy:deploy-file -Durl=file://$(pwd)/jnativehook-local/ -Dfile=./JNativeHook/jar/JNativeHook.jar -DgroupId=org.jnativehook -DartifactId=JNativeHook -Dpackaging=jar -Dversion=1.1.4
 
 
-<style type="text/css">
-    pre { border: 1px solid black; background: #AFA; padding: 1em; }
-</style>
