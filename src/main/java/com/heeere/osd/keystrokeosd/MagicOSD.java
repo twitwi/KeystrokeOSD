@@ -41,7 +41,7 @@ public class MagicOSD {
             @Override public Void apply(Event p1) {
                 if (quitOnEsc && p1.type == Event.Type.KEY_PRESSED && p1.asKeyPressed().ev.getKeyCode() == NativeKeyEvent.VK_ESCAPE) {
                     GlobalScreen.unregisterNativeHook();
-                    System.exit(0);
+                    //System.exit(0);
                     return null;
                 }
                 return null;
