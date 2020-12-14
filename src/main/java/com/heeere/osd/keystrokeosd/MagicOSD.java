@@ -14,7 +14,7 @@ public class MagicOSD {
     
     public static void main(String[] arSsgs) throws NativeHookException {
         
-        final boolean quitOnEsc = true;
+        final boolean quitOnEsc = false;
         
         final BlockingQueue<Event> qKeybord = q();
         final BlockingQueue<Event> qEscapeDetector = q();
@@ -39,8 +39,13 @@ public class MagicOSD {
         // escape
         consume(qEscapeDetector, new F1<Void, Event>() {
             @Override public Void apply(Event p1) {
-                if (quitOnEsc && p1.type == Event.Type.KEY_PRESSED && p1.asKeyPressed().ev.getKeyCode() == NativeKeyEvent.VK_ESCAPE) {
-                    GlobalScreen.unregisterNativeHook();
+                if (quitOnEsc && p1.type == Event.Type.KEY_PRESSED && p1.asKeyPressed().ev.getKeyCode() == NativeKeyEvent.VC_ESCAPE) {
+                    try {
+                        GlobalScreen.unregisterNativeHook();
+                    } catch (NativeHookException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                     //System.exit(0);
                     return null;
                 }

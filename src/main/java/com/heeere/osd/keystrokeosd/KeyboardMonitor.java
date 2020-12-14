@@ -17,7 +17,7 @@ public abstract class KeyboardMonitor {
     public static KeyboardMonitor produceIn(final BlockingQueue<Event> q) throws NativeHookException {
         GlobalScreen.registerNativeHook();
         //Construct the example object and initialze native hook.
-        GlobalScreen.getInstance().addNativeKeyListener(new NativeKeyListener() {
+        GlobalScreen.addNativeKeyListener(new NativeKeyListener() {
             public void nativeKeyPressed(NativeKeyEvent e) {
                 checkTrue(q.offer(new Event.KeyPressed(e)));
             }

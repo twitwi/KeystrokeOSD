@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.sql.rowset.serial.SerialRef;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -59,13 +61,14 @@ public class KeyboardOSD {
     // real class content
     
     private int lastPressedCode;
+    private int lastPressedLocation;
     protected void process(Event e) {
         JPanel tmp;
         NativeKeyEvent ev;
         String str;
         switch (e.type) {
             case KEY_TYPED:
-                tmp = addKey(e.asKeyTyped().ev, lastPressedCode);
+                tmp = addKey(e.asKeyTyped().ev, lastPressedCode, lastPressedLocation);
                 removeKey(fadeAfter, fadeFor, tmp);
                 break;
             case KEY_PRESSED: {
@@ -80,10 +83,11 @@ public class KeyboardOSD {
                     tmp.setBorder(new LineBorder(Color.RED.brighter(), 4));
                     /**/ removeKey(fadeAfter, fadeFor, tmp);
                 } else if (ev.getKeyCode()>=37 && ev.getKeyCode()<=40) {
-                    tmp = addKey(e.asKeyPressed().ev, lastPressedCode);
+                    tmp = addKey(e.asKeyPressed().ev, lastPressedCode, lastPressedLocation);
                     removeKey(fadeAfter, fadeFor, tmp);
                 } else {
                     lastPressedCode = ev.getKeyCode();
+                    lastPressedLocation = ev.getKeyLocation();
                 }
                 break;
             }
@@ -180,19 +184,22 @@ public class KeyboardOSD {
     }
     
     private final Map<String, String> keyPatch = new HashMap<String, String>() {{
-        put("1 8", "⇽");
-        put("1 9", "↹");
-        put("1 10", "↲");
-        put("1 32", "␣");
-        put("1 37", "⇦");//←
-        put("1 38", "⇧");//↑
-        put("1 39", "⇨");//→
-        put("1 40", "⇩");//↓
+        put("1 14", "⇽");
+        put("1 15", "↹");
+        put("1 28", "↲");
+        put("1 57", "␣");
+        put("1 1", "Esc");
+        put("1 57419", "⇦");//←
+        put("1 57416", "⇧");//↑
+        put("1 57421", "⇨");//→
+        put("1 57424", "⇩");//↓
     }};
-    private JPanel addKey(NativeKeyEvent ev, int lastPressedCode) {
+    private JPanel addKey(NativeKeyEvent ev, int lastPressedCode, int lastPressedLocation) {
         String keyChar = ev.getKeyChar()+"";
+        int location = ev.getKeyLocation() == 0 ? lastPressedLocation : ev.getKeyLocation();
         int code = ev.getKeyCode() == 0 ? lastPressedCode : ev.getKeyCode();
-        String patched = keyPatch.get(ev.getKeyLocation()+" "+code);
+        String patched = keyPatch.get(location+" "+code);
+        System.out.println("((("+lastPressedLocation+"/"+lastPressedCode+ " -- "+ev.getKeyLocation()+"/"+ev.getKeyCode()+ " -- "+ev.getKeyChar()+")))");
         if (patched != null) keyChar = patched;
         return addKey(keyChar);
     }
@@ -254,12 +261,12 @@ public class KeyboardOSD {
     }
 
     private String getMod(NativeKeyEvent ev) {
-        if (is(ev, 2, 16)) return "lshift";
-        if (is(ev, 3, 16)) return "rshift";
-        if (is(ev, 2, 17)) return "lctrl";
-        if (is(ev, 3, 17)) return "rctrl";
-        if (is(ev, 2, 18)) return "lalt";
-        if (is(ev, 3, 18)) return "ralt";
+        if (is(ev, 2, 42)) return "lshift";
+        if (is(ev, 3, 3638)) return "rshift";
+        if (is(ev, 2, 29)) return "lctrl";
+        if (is(ev, 3, 29)) return "rctrl";
+        if (is(ev, 2, 56)) return "lalt";
+        if (is(ev, 3, 56)) return "ralt";
         return null; 
     }
     
