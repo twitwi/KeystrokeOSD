@@ -1,10 +1,10 @@
 
 # Using the pre-built version
 
-The built version is only 28KB so it is included in a dist/ folder.
+The built version is only 232KB (mostly jnativehooks) so it is included in a dist/ folder.
 It can be run directly with:
 
-    java -cp jnativehook-local/org/jnativehook/JNativeHook/1.1.4/JNativeHook-1.1.4.jar:dist/KeystrokeOSD-latest.jar com.heeere.osd.keystrokeosd.MagicOSD
+    java -cp dist/KeystrokeOSD-2.0-SNAPSHOT-jar-with-dependencies.jar com.heeere.osd.keystrokeosd.MagicOSD 
 
 # Building and testing
 
@@ -12,15 +12,15 @@ Building should work out of the box with maven:
 
     mvn install
 
-The live key viewer can be run with:
+The live key viewer can then be run with:
 
-    java -cp jnativehook-local/org/jnativehook/JNativeHook/1.1.4/JNativeHook-1.1.4.jar:target/KeystrokeOSD-1.0-SNAPSHOT.jar com.heeere.osd.keystrokeosd.MagicOSD
+    java -cp target/KeystrokeOSD-2.0-SNAPSHOT-jar-with-dependencies.jar com.heeere.osd.keystrokeosd.MagicOSD
 
 Use your window manager or Ctrl+C it to close it.
 
 
 
-# How the "local" maven repository was done
+# OLD: How the "local" maven repository was done
 
 Following https://devcenter.heroku.com/articles/local-maven-dependencies
 
